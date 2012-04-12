@@ -109,7 +109,7 @@ public class TextLabel extends Dialog {
 		      			case SWT.MouseDown:
 		      				GC gc = new GC(image);
 		      				gc.setFont(font); 
-		      				gc.drawText("looool", e.x+canvas.canvasShiftX,e.y-17-canvas.canvasShiftY,true);
+		      				gc.drawText("looool", e.x-canvas.canvasShiftX,e.y-17-canvas.canvasShiftY,true);
 		      				gc.dispose();	      				
 		      				break;
 		      			case SWT.MouseMove:

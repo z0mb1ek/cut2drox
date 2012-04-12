@@ -25,8 +25,8 @@ public class ResizableCanvas extends Canvas {
 	int height;
 	Image image=null;
 	String s="";
-	int textx=0;
-	int texty=0;
+	int textX=0;
+	int textY=0;
 	int canvasShiftX=0;
 	int canvasShiftY=0;
 	Font font;
@@ -85,10 +85,12 @@ public class ResizableCanvas extends Canvas {
         if (hSelection >= hPage) {
           if (hPage <= 0) hSelection = 0;
           origin.x = -hSelection;
+          canvasShiftX=origin.x;
         }
         if (vSelection >= vPage) {
           if (vPage <= 0) vSelection = 0;
           origin.y = -vSelection;
+          canvasShiftY=origin.y;
         }
         redraw();
       }
@@ -108,7 +110,7 @@ public class ResizableCanvas extends Canvas {
           gc.fillRectangle(0, rect.height, client.width, marginHeight);
         }
         gc.setFont(font); 
-        gc.drawText(s, textx, texty,true);
+        gc.drawText(s, textX, textY,true);
       }
     };
 	
@@ -136,8 +138,8 @@ public class ResizableCanvas extends Canvas {
     public void drawRText(String s,int i,int j, Font font) //заняться методом!!!
     {
     	this.s=s;
-    	this.textx=i;
-    	this.texty=j;
+    	this.textX=i;
+    	this.textY=j;
     	this.font=font;
     	redraw();
     }
