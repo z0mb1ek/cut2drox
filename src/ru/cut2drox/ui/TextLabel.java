@@ -1,5 +1,8 @@
 package ru.cut2drox.ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -21,13 +24,32 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Combo;
 
+import ru.cut2drox.brain.Config;
+
 public class TextLabel extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
 	protected Shell parent;
 	private Text text;
-	final Font[] font = new Font[1];
+	Font font;
+	
+	FontData loadFont(Display display) throws FileNotFoundException
+	{
+		Config conf=new Config().takeConfig();
+		FontData defaultFont = new FontData(conf.getFont(), conf.getFontSize(),conf.getFontStyle());
+		font=new Font(display, defaultFont);
+		return defaultFont;
+	}
+	
+	void setFont(FontData newFont) throws IOException
+	{
+		Config conf=new Config().takeConfig();
+		conf.setFont(newFont.getName());
+		conf.setFontSize(newFont.getHeight());
+		conf.setFontStyle(newFont.getStyle());
+		conf.makeConfig();
+	}
 
 	public TextLabel(Shell parent, int style) {
 		super(parent, style);
@@ -35,7 +57,7 @@ public class TextLabel extends Dialog {
 		setText("SWT Dialog");
 	}
 
-	public Object open(final ResizableCanvas canvas,final Image image) {
+	public Object open(final ResizableCanvas canvas,final Image image) throws FileNotFoundException {
 		Display display = getParent().getDisplay();
 		createContents(canvas,image,display);
 		shell.open();
@@ -49,11 +71,12 @@ public class TextLabel extends Dialog {
 		return result;
 	}
 
-	private void createContents(final ResizableCanvas canvas,final Image image,final Display display) {
+	private void createContents(final ResizableCanvas canvas,final Image image,final Display display) throws FileNotFoundException {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		shell.setSize(303, 182);
 		shell.setText(getText());
 		final FontDialog fd = new FontDialog(shell);
+		fd.setFontData(loadFont(display));
 		
 		Rectangle client=shell.getBounds();
 		Rectangle par=parent.getBounds();
@@ -76,30 +99,29 @@ public class TextLabel extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent se) {
 				shell.dispose();
-				//canvas.drawRText("looool",se.x,se.y-17);
 				//-----------------------------------
 				Listener listener = new Listener() {
 		            public void handleEvent(Event e) {
 		      		switch (e.type) {
 		      			case SWT.MouseEnter:
-		      				canvas.drawRText("looool",e.x,e.y-17);
+		      				canvas.drawRText("looool",e.x,e.y-17,font);
 		      				break;
 		      			case SWT.MouseDown:
-		      				//Font font = new Font(display,"Arial",14,SWT.BOLD | SWT.ITALIC); 
 		      				GC gc = new GC(image);
-		      				gc.setFont(font[0]); 
-		      				gc.drawText("looool", e.x+canvas.gettest(),e.y-17,true);
-		      				gc.dispose();
-		      				
+		      				gc.setFont(font); 
+		      				gc.drawText("looool", e.x+canvas.canvasShiftX,e.y-17-canvas.canvasShiftY,true);
+		      				gc.dispose();	      				
 		      				break;
 		      			case SWT.MouseMove:
-		      				canvas.drawRText("looool",e.x,e.y-17);
+		      				canvas.drawRText("looool",e.x,e.y-17,font);
 		      				break;
 		      			case SWT.MouseUp:
+		      				canvas.drawRText("",-1,-1,font); //убираем мышку с канваса
 		      				canvas.removeListener(SWT.MouseMove, this);
 		      				canvas.removeListener(SWT.MouseDown, this);
 		      				canvas.removeListener(SWT.MouseUp, this);
 		      				canvas.removeListener(SWT.MouseEnter, this);
+		      				canvas.redraw();
 		      	  	      	break;
 		      			}
 		            }
@@ -133,15 +155,12 @@ public class TextLabel extends Dialog {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				FontData defaultFont = new FontData("Courier", 10, SWT.BOLD);
-				System.out.println(defaultFont.getName());
-				System.out.println(defaultFont.getHeight());
-				System.out.println(defaultFont.getStyle());
-		        fd.setFontData(defaultFont);
 		        FontData newFont = fd.open();
 		        if (newFont == null) return;
-		        font[0]=new Font(display, newFont);
-	            
+		        font=new Font(display, newFont);
+		        try {
+					setFont(newFont);
+				} catch (IOException e) {e.printStackTrace();}
 			}
 		});
 		btnNewButton_1.setBounds(212, 8, 75, 23);

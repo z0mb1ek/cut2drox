@@ -27,13 +27,13 @@ public class ResizableCanvas extends Canvas {
 	String s="";
 	int textx=0;
 	int texty=0;
-	int testm=0;
+	int canvasShiftX=0;
+	int canvasShiftY=0;
 	Font font;
 	
 	public ResizableCanvas(Composite arg0, int arg1,Display disp) {
 		super(arg0, arg1);
 		this.display=disp;
-		font = new Font(display,"Arial",14,SWT.BOLD | SWT.ITALIC); 
 	}
 	
 	ScrollBar hBar = this.getHorizontalBar();
@@ -52,8 +52,7 @@ public class ResizableCanvas extends Canvas {
 	        Rectangle rect = image.getBounds();
 	       	scroll(destX, 0, 0, 0, rect.width, rect.height, false);
 	        origin.x = -hSelection;
-	        System.out.println(origin.x);
-	        testm=origin.x;
+	        canvasShiftX=origin.x;
 		}
 
 	};
@@ -66,8 +65,7 @@ public class ResizableCanvas extends Canvas {
         Rectangle rect = image.getBounds();
         scroll(0, destY, 0, 0, rect.width, rect.height, false);
         origin.y = -vSelection;
-    
-       
+        canvasShiftY=origin.y;
       }
 
     };
@@ -135,16 +133,22 @@ public class ResizableCanvas extends Canvas {
     	this.image=image;
     }
     
-    public void drawRText(String s,int i,int j)
+    public void drawRText(String s,int i,int j, Font font) //заняться методом!!!
     {
     	this.s=s;
     	this.textx=i;
     	this.texty=j;
+    	this.font=font;
     	redraw();
     }
-    public int gettest()
+    public int getCanvasShiftX()
     {
-    	return -testm;
+    	return -canvasShiftX;
+    }
+    
+    public int getCanvasShiftY()
+    {
+    	return -canvasShiftY;
     }
     
 

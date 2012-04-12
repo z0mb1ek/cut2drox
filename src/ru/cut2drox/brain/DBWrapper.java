@@ -37,8 +37,7 @@ public class DBWrapper {
 	
 	public DBWrapper() throws MalformedURLException, DropboxException, IOException, URISyntaxException
 	{
-		conf = new Config();
-		conf=new Config().takeConfig("D:/object.yaml");
+		conf = new Config().takeConfig();
 		if(conf.getFirstConnectToDB()==0)
 		{
 			firstConnect();
@@ -64,7 +63,7 @@ public class DBWrapper {
       	conf.setAppKey(tokens.key);
       	conf.setAppSecret(tokens.secret);
       	conf.setFirstConnectToDB(1);
-      	conf.makeConfig("D:/object.yaml");
+      	conf.makeConfig();
       	
       	this.mDB = new DropboxAPI<WebAuthSession>(session);
 	}

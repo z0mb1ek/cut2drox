@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -133,7 +134,9 @@ public class SendForm {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				TextLabel tl = new TextLabel(shellForm,SWT.DIALOG_TRIM);
-				tl.open(canvas,image);
+				try {
+					tl.open(canvas,image); 
+					} catch (FileNotFoundException e) {e.printStackTrace();}
 			}
 		});
 		btnNewButton_1.setImage(SWTResourceManager.getImage("D:\\T6.png"));

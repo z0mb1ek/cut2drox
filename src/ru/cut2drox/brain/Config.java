@@ -13,6 +13,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -22,12 +24,49 @@ public class Config {
 	int firstConnectToDB;
 	String app_key;
 	String app_secret;
+	String font;
+	int fontSize;
+	int fontStyle;
+	
+	String path=ClassLoader.getSystemResource(".").getPath()+"conf.yaml";
 //	String[] test = {"qwe","qweqw"};
 	
-	Config(){
+	public Config(){
 		firstConnectToDB=0;
 		app_key="";
 		app_secret="";
+		font="";
+		fontSize=0;
+		fontStyle=0;
+	}
+	
+	public void setFontStyle(int style)
+	{
+		this.fontStyle=style;
+	}
+	
+	public int getFontStyle()
+	{
+		return fontStyle;
+	}
+	
+	public void setFontSize(int size)
+	{
+		this.fontSize=size;
+	}
+	
+	public int getFontSize()
+	{
+		return fontSize;
+	}
+	
+	public String getFont()
+	{
+		return font;
+	}
+	public void setFont(String font)
+	{
+		this.font=font;
 	}
 	
 	public int getFirstConnectToDB()
@@ -90,7 +129,7 @@ public class Config {
 ////	    	 System.out.println(c.getAppSecret());
 //	    }
 	
-	public void makeConfig(String path) throws IOException
+	void makeConf(String path) throws IOException
 	{
     	DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -101,13 +140,18 @@ public class Config {
 		out.close();
 	}
 	
-	public Config takeConfig(String path) throws FileNotFoundException
+	public Config takeConfig() throws FileNotFoundException
 	{
 		Config c = new Config();
 		Yaml yaml = new Yaml();
 		InputStream input = new FileInputStream(new File(path));
 		c=(Config) yaml.load(input);
 		return c;
+	}
+	
+	public void makeConfig() throws IOException
+	{
+		makeConf(path);
 	}
 	
 }
