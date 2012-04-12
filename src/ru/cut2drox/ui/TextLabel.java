@@ -48,6 +48,7 @@ public class TextLabel extends Dialog {
 		Config conf=new Config().takeConfig();
 		conf.setFont(newFont.getName());
 		conf.setFontSize(newFont.getHeight());
+		fontSize=newFont.getHeight();
 		conf.setFontStyle(newFont.getStyle());
 		conf.makeConfig();
 	}
@@ -188,6 +189,7 @@ public class TextLabel extends Dialog {
 		        try {
 					setFont(newFont);
 				} catch (IOException e) {e.printStackTrace();}
+		        combo.setText(Integer.toString(fontSize));
 			}
 		});
 		btnNewButton_1.setBounds(212, 8, 75, 23);
