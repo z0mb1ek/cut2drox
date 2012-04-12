@@ -1,8 +1,6 @@
 package ru.cut2drox.brain;
 
 import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

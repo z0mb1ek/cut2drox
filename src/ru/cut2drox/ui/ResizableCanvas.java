@@ -12,9 +12,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Scrollable;
-import org.eclipse.swt.widgets.Shell;
-
 
 public class ResizableCanvas extends Canvas {
 
