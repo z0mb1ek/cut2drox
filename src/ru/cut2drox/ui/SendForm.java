@@ -30,6 +30,7 @@ import ru.cut2drox.brain.DBWrapper;
 import ru.cut2drox.brain.TrayIcon;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Label;
 
 public class SendForm {
 
@@ -79,11 +80,20 @@ public class SendForm {
 		Monitor[] list = display.getMonitors();
 		org.eclipse.swt.graphics.Rectangle client = shellForm.getBounds();
 		org.eclipse.swt.graphics.Rectangle screen = list[0].getBounds();
-		client.width=image.getBounds().width+85; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
-		client.height=image.getBounds().height+110;
+		client.width=image.getBounds().width+70; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
+		client.height=image.getBounds().height+117;
 		client.x = screen.width/2 -client.width/2;
 		client.y = screen.height/2 - client.height/2;
 		shellForm.setBounds(client);
+		
+		Composite composite_1 = new Composite(shellForm, SWT.NONE);
+		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite_1.heightHint = 22;
+		composite_1.setLayoutData(gd_composite_1);
+		
+		Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE);
+		btnNewButton_3.setBounds(0, 0, 22, 22);
+		new Label(shellForm, SWT.NONE);
 		
 		final ResizableCanvas canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL,display);
 		
@@ -97,8 +107,8 @@ public class SendForm {
 
 		shellForm.addListener (SWT.Resize,  new Listener () {
 		    public void handleEvent (Event e) {
-		    	int i=shellForm.getClientArea().width-53;
-		    	int j=shellForm.getClientArea().height-55;
+		    	int i=shellForm.getClientArea().width-38;
+		    	int j=shellForm.getClientArea().height-62;
 		    if(i>image.getBounds().width+15)
 		    {
 		    	i=image.getBounds().width+17;
@@ -107,7 +117,7 @@ public class SendForm {
 		    {
 		    	j=image.getBounds().height+17;
 		    }
-		    	canvas.setRBounds(20, 20, i, j);
+		    	canvas.setRBounds(5, 30, i, j);
 		    } 
 		});
 		
@@ -129,16 +139,16 @@ public class SendForm {
 			}
 		});
 		btnNewButton_1.setImage(SWTResourceManager.getImage("D:\\T6.png"));
-		btnNewButton_1.setBounds(0, 14, 25, 25);
+		btnNewButton_1.setBounds(0, 0, 25, 25);
 		btnNewButton_1.setText("");
 		
 		Button btnNewButton_2 = new Button(composite, SWT.NONE);
-		btnNewButton_2.setBounds(0, 45, 25, 25);
+		btnNewButton_2.setBounds(0, 31, 25, 25);
 		btnNewButton_2.setText("");
 		
 		Button button = new Button(composite, SWT.NONE);
 		button.setText("");
-		button.setBounds(0, 76, 25, 25);
+		button.setBounds(0, 62, 25, 25);
         //-----------------------------------  
 		
 		Button btnNewButton = new Button(shellForm, SWT.NONE);
