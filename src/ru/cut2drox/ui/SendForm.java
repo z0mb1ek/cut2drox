@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -31,6 +32,8 @@ import ru.cut2drox.brain.TrayIcon;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.PaintEvent;
 
 public class SendForm {
 
@@ -88,12 +91,54 @@ public class SendForm {
 		
 		Composite composite_1 = new Composite(shellForm, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite_1.widthHint = 211;
 		gd_composite_1.heightHint = 22;
 		composite_1.setLayoutData(gd_composite_1);
 		
-		Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE);
+		final Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE);
+		final Button button_1 = new Button(composite_1, SWT.TOGGLE);
+		
+		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				button_1.setSelection(false);
+				btnNewButton_3.setSelection(true);
+			}
+		});
+		
+		btnNewButton_3.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(0,0,0)); 
+				gc.fillRectangle(5,5,12,12);
+			}
+		});
+		btnNewButton_3.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
 		btnNewButton_3.setBounds(0, 0, 22, 22);
-		new Label(shellForm, SWT.NONE);
+		
+		
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				btnNewButton_3.setSelection(false);
+				button_1.setSelection(true);
+			}
+		});
+		button_1.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
+		button_1.setBounds(28, 0, 22, 22);
+		button_1.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(255,0,0)); 
+				gc.fillRectangle(5,5,12,12);
+			}
+		});
+		
+		Button button_2 = new Button(shellForm, SWT.NONE);
+		GridData gd_button_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_button_2.widthHint = 25;
+		button_2.setLayoutData(gd_button_2);
+		button_2.setText("");
 		
 		final ResizableCanvas canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL,display);
 		
@@ -170,19 +215,19 @@ public class SendForm {
 					DBWrapper connection = new DBWrapper();
 					String imageShortURL = connection.sendImage(fullPath, nameImage);
 					
-					//--------govnokod------------------
-					String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
-							"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" +
-							"<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\" />" +
-							"<title>cut2drox</title></head> " +
-							"<body><div align=\"center\">" +
-							"<img src=\""+imageShortURL +"\"/></div> " +
-							"</body></html>";
-					String nameCover = partName + ".xhtml";
-					ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
-					String finalURL = connection.sendFile(inputStream, content.length(), nameCover);
-					
-					StringSelection ss = new StringSelection(finalURL);
+//					//--------govnokod------------------
+//					String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
+//							"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" +
+//							"<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\" />" +
+//							"<title>cut2drox</title></head> " +
+//							"<body><div align=\"center\">" +
+//							"<img src=\""+imageShortURL +"\"/></div> " +
+//							"</body></html>";
+//					String nameCover = partName + ".xhtml";
+//					ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
+//					String finalURL = connection.sendFile(inputStream, content.length(), nameCover);
+//					
+					StringSelection ss = new StringSelection(imageShortURL);
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 					
 					ti.showBalloon(shell);

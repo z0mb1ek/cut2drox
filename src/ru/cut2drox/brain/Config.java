@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -20,6 +23,9 @@ public class Config {
 	String font;
 	int fontSize;
 	int fontStyle;
+	int R;
+	int G;
+	int B;
 	
 	String path=ClassLoader.getSystemResource(".").getPath()+"conf.yaml";
 //	String[] test = {"qwe","qweqw"};
@@ -31,8 +37,36 @@ public class Config {
 		font="";
 		fontSize=0;
 		fontStyle=0;
+		R=0;
+		G=0;
+		B=0;
 	}
 	
+	
+	public void setR(int r)
+	{
+		this.R=r;
+	}
+	public int getR()
+	{
+		return R;
+	}
+	public void setG(int g)
+	{
+		this.G=g;
+	}
+	public int getG()
+	{
+		return G;
+	}
+	public void setB(int b)
+	{
+		this.B=b;
+	}
+	public int getB()
+	{
+		return B;
+	}
 	public void setFontStyle(int style)
 	{
 		this.fontStyle=style;

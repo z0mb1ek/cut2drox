@@ -1,10 +1,14 @@
 package ru.cut2drox.ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +16,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.wb.swt.SWTResourceManager;
+
+import ru.cut2drox.brain.Config;
 
 public class ResizableCanvas extends Canvas {
 
@@ -106,6 +113,11 @@ public class ResizableCanvas extends Canvas {
         if (marginHeight > 0) {
           gc.fillRectangle(0, rect.height, client.width, marginHeight);
         }
+        try {
+			Config conf=new Config().takeConfig();
+			 gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));   //цвет
+			} catch (FileNotFoundException e1) {e1.printStackTrace();}
+       
         gc.setFont(font); 
         gc.drawText(s, textX, textY,true);
       }

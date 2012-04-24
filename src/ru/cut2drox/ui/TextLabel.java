@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -21,6 +22,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import ru.cut2drox.brain.Config;
 
@@ -130,7 +132,6 @@ public class TextLabel extends Dialog {
 				shell.dispose();
 				if(!temp.isEmpty())
 				{
-					System.out.println();
 					Listener listener = new Listener() {
 						public void handleEvent(Event e) {
 							switch (e.type) {
@@ -139,7 +140,11 @@ public class TextLabel extends Dialog {
 									break;
 								case SWT.MouseDown:
 									GC gc = new GC(image);
-									gc.setFont(font); 
+									gc.setFont(font);
+									try {
+									Config conf=new Config().takeConfig();
+									gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
+									} catch (FileNotFoundException e1) {e1.printStackTrace();}
 									gc.drawText(temp, e.x-canvas.canvasShiftX,e.y-17-canvas.canvasShiftY,true);
 									gc.dispose();	      				
 									break;
@@ -183,12 +188,22 @@ public class TextLabel extends Dialog {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Config conf=new Config().takeConfig();
+					fd.setRGB(new RGB(conf.getR(),conf.getG(),conf.getB()));
+					
 		        FontData newFont = fd.open();
 		        if (newFont == null) return;
 		        font=new Font(display, newFont);
 		        try {
 					setFont(newFont);
 				} catch (IOException e) {e.printStackTrace();}
+		        RGB temp = fd.getRGB();
+		        conf.setR(temp.red);
+		        conf.setG(temp.green);
+		        conf.setB(temp.blue);
+		        conf.makeConfig();
+				} catch (FileNotFoundException e1) {e1.printStackTrace();} catch (IOException e) {e.printStackTrace();}
 		        combo.setText(Integer.toString(fontSize));
 			}
 		});

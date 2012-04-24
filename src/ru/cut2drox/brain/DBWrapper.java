@@ -83,6 +83,7 @@ public class DBWrapper {
 		long length = f.length();
         Entry newEntry = mDB.putFile("/images/"+name,input, length, null, null);
         DropboxLink dl =  mDB.share("/images/"+name);
+        System.out.println(dl.url);
         return dl.url;
 	}
 	
