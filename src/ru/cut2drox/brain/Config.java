@@ -136,25 +136,11 @@ public class Config {
 		this.app_secret=secret;
 	}
 	
-//	 public static void main(String arg[]) throws IOException
-//	    {
-//	    	Config c = new Config();
-//	    	DumperOptions options = new DumperOptions();
-//	        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-//	    	Yaml yaml = new Yaml(options);
-//	    	 //OutputStream input = new FileOutputStream(new File("D:/object.yaml"));
-//	    	// StringWriter writer = new StringWriter();
-//			
-//			//System.out.println(yaml.dump(c));
-//			BufferedWriter out = new BufferedWriter(new FileWriter("D:/object.yaml"));
-//			out.write(yaml.dump(c));
-//			out.close();
-////	    	 InputStream input = new FileInputStream(new File("D:/object.yaml"));
-////	    	 c=(Config) yaml.load(input);
-////	    	 System.out.println(c.getAppKey());
-////	    	 System.out.println(c.getFirstConnectToDB());
-////	    	 System.out.println(c.getAppSecret());
-//	    }
+	 public static void main(String arg[]) throws IOException
+	    {
+	    	Config c = new Config();
+	    	c.makeConfig();
+	    }
 	
 	void makeConf(String path) throws IOException
 	{

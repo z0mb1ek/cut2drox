@@ -20,7 +20,7 @@ public class TrayIcon {
 	{
 		tip = new ToolTip(shell, SWT.BALLOON | SWT.ICON_INFORMATION);
 		//Image trayImage = new Image(display, 16, 16);
-		Image trayImage = new Image(display, "D:/bestt.png");
+		//Image trayImage = new Image(display, "D:/bestt.png");
 		final Tray tray = display.getSystemTray();
 	    if (tray == null) {
 	      System.out.println("The system tray is not available");
@@ -38,7 +38,7 @@ public class TrayIcon {
 	          System.out.println("default selection");
 	        }
 	      });
-	      item.setImage(trayImage);
+	     // item.setImage(trayImage);
 	    }
 	}
 	public TrayIcon()

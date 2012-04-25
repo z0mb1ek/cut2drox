@@ -29,7 +29,7 @@ import ru.cut2drox.brain.Config;
 public class TextLabel extends Dialog {
 
 	protected Object result;
-	protected Shell shell;
+	protected Shell shlEe;
 	protected Shell parent;
 	private Text text;
 	Font font;
@@ -67,14 +67,19 @@ public class TextLabel extends Dialog {
 		this.parent=parent;
 		setText("SWT Dialog");
 	}
+	
+	/**
+	 * @param tip 
+	 * @wbp.parser.entryPoint
+	 */
 
 	public Object open(final ResizableCanvas canvas,final Image image) throws FileNotFoundException {
 		Display display = getParent().getDisplay();
 		createContents(canvas,image,display);
-		shell.open();
-		shell.layout();
+		shlEe.open();
+		shlEe.layout();
 		
-		while (!shell.isDisposed()) {
+		while (!shlEe.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -83,33 +88,33 @@ public class TextLabel extends Dialog {
 	}
 
 	private void createContents(final ResizableCanvas canvas,final Image image,final Display display) throws FileNotFoundException {
-		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
-		shell.setSize(303, 182);
-		shell.setText(getText());
-		final FontDialog fd = new FontDialog(shell);
+		shlEe = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
+		shlEe.setSize(303, 182);
+		shlEe.setText("Текстовая метка");
+		final FontDialog fd = new FontDialog(shlEe);
 		fd.setFontData(loadFont(display));
 		
-		Rectangle client=shell.getBounds();
+		Rectangle client=shlEe.getBounds();
 		Rectangle par=parent.getBounds();
 		client.x=(par.x+par.width/2)-client.width/2;
 		client.y=(par.y+par.height/2)-client.height/2;
-		shell.setBounds(client);
+		shlEe.setBounds(client);
 		
-		Button button = new Button(shell, SWT.NONE);
+		Button button = new Button(shlEe, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shell.dispose();
+				shlEe.dispose();
 			}
 		});
 		button.setBounds(154, 119, 75, 25);
 		button.setText("Отмена");
 		
-		text = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.MULTI);
+		text = new Text(shlEe, SWT.BORDER | SWT.WRAP | SWT.MULTI);
 		text.setBounds(10, 40, 277, 73);
 		
 		//TODO: сделать проверку на ввод только цифр
-				final Combo combo = new Combo(shell, SWT.NONE);
+				final Combo combo = new Combo(shlEe, SWT.NONE);
 				combo.setBounds(150, 8, 56, 23);
 				combo.setItems(items);
 				combo.setText(Integer.toString(fontSize));
@@ -123,13 +128,13 @@ public class TextLabel extends Dialog {
 				      }
 				    });
 		
-		Button btnNewButton = new Button(shell, SWT.NONE);
+		Button btnNewButton = new Button(shlEe, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent se) {
 				final String temp=text.getText();
 
-				shell.dispose();
+				shlEe.dispose();
 				if(!temp.isEmpty())
 				{
 					Listener listener = new Listener() {
@@ -172,18 +177,18 @@ public class TextLabel extends Dialog {
 		btnNewButton.setBounds(73, 119, 75, 25);
 		btnNewButton.setText("ОК");
 		
-		Label label = new Label(shell, SWT.NONE);
+		Label label = new Label(shlEe, SWT.NONE);
 		label.setBounds(10, 19, 33, 15);
 		label.setText("Текст:");
 		
-		Label label_1 = new Label(shell, SWT.NONE);
+		Label label_1 = new Label(shlEe, SWT.NONE);
 		label_1.setBounds(57, 11, 91, 15);
 		label_1.setText("Размер шрифта:");
 		
 		
 		
 		
-		Button btnNewButton_1 = new Button(shell, SWT.NONE);
+		Button btnNewButton_1 = new Button(shlEe, SWT.NONE);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("deprecation")
 			@Override
