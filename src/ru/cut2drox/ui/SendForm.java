@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import com.dropbox.client2.exception.DropboxException;
 
+import ru.cut2drox.brain.Config;
 import ru.cut2drox.brain.DBWrapper;
 import ru.cut2drox.brain.TrayIcon;
 import org.eclipse.swt.widgets.Composite;
@@ -95,14 +96,132 @@ public class SendForm {
 		gd_composite_1.heightHint = 22;
 		composite_1.setLayoutData(gd_composite_1);
 		
-		final Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE);
+		final Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE); //группа цветов
 		final Button button_1 = new Button(composite_1, SWT.TOGGLE);
+		final Button button_3 = new Button(composite_1, SWT.TOGGLE);
+		final Button button_4 = new Button(composite_1, SWT.TOGGLE);
+		final Button button_5 = new Button(composite_1, SWT.TOGGLE);
+		final Button button_6 = new Button(composite_1, SWT.TOGGLE);
+		
+		button_4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Config conf=new Config().takeConfig();
+					 conf.setR(0);
+				     conf.setG(0);
+				     conf.setB(255);
+				     conf.makeConfig();
+				} catch (IOException e) {e.printStackTrace();}
+				
+				btnNewButton_3.setSelection(false);
+				button_1.setSelection(false);
+				button_3.setSelection(false);
+				button_4.setSelection(true);
+				button_5.setSelection(false);
+				button_6.setSelection(false);
+			}
+		});
+		button_5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Config conf=new Config().takeConfig();
+					 conf.setR(255);
+				     conf.setG(255);
+				     conf.setB(255);
+				     conf.makeConfig();
+				} catch (IOException e) {e.printStackTrace();}
+				btnNewButton_3.setSelection(false);
+				button_1.setSelection(false);
+				button_3.setSelection(false);
+				button_4.setSelection(false);
+				button_5.setSelection(true);
+				button_6.setSelection(false);
+			}
+		});
+		button_6.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				btnNewButton_3.setSelection(false);
+				button_1.setSelection(false);
+				button_3.setSelection(false);
+				button_4.setSelection(false);
+				button_5.setSelection(false);
+				button_6.setSelection(true);
+			}
+		});
+		
+		button_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Config conf=new Config().takeConfig();
+					 conf.setR(0);
+				     conf.setG(128);
+				     conf.setB(0);
+				     conf.makeConfig();
+				} catch (IOException e) {e.printStackTrace();}
+				btnNewButton_3.setSelection(false);
+				button_1.setSelection(false);
+				button_3.setSelection(true);
+				button_4.setSelection(false);
+				button_5.setSelection(false);
+				button_6.setSelection(false);
+			}
+		});
+		
+		button_3.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(0,128,0)); 
+				gc.fillRectangle(5,5,12,12);
+			}
+		});
+		button_4.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(0,0,255)); 
+				gc.fillRectangle(5,5,12,12);
+			}
+		});
+		button_5.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(255,255,255)); 
+				gc.fillRectangle(5,5,12,12);
+			}
+		});
+		button_6.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				gc.setBackground(SWTResourceManager.getColor(255,0,0)); 
+				gc.fillRectangle(5,5,4,12);
+				gc.setBackground(SWTResourceManager.getColor(0,128,0));
+				gc.fillRectangle(9,5,4,12);
+				gc.setBackground(SWTResourceManager.getColor(0,0,255));
+				gc.fillRectangle(13,5,4,12);
+			}
+		});
+		
+		
 		
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				button_1.setSelection(false);
+				try {
+					Config conf=new Config().takeConfig();
+					 conf.setR(0);
+				     conf.setG(0);
+				     conf.setB(0);
+				     conf.makeConfig();
+				} catch (IOException e) {e.printStackTrace();}
 				btnNewButton_3.setSelection(true);
+				button_1.setSelection(false);
+				button_3.setSelection(false);
+				button_4.setSelection(false);
+				button_5.setSelection(false);
+				button_6.setSelection(false);
 			}
 		});
 		
@@ -120,12 +239,41 @@ public class SendForm {
 		button_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Config conf=new Config().takeConfig();
+					 conf.setR(255);
+				     conf.setG(0);
+				     conf.setB(0);
+				     conf.makeConfig();
+				} catch (IOException e) {e.printStackTrace();}
 				btnNewButton_3.setSelection(false);
 				button_1.setSelection(true);
+				button_3.setSelection(false);
+				button_4.setSelection(false);
+				button_5.setSelection(false);
+				button_6.setSelection(false);
 			}
 		});
 		button_1.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
 		button_1.setBounds(28, 0, 22, 22);
+		
+		
+		button_3.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
+		button_3.setBounds(56, 0, 22, 22);
+		
+		
+		button_4.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
+		button_4.setBounds(84, 0, 22, 22);
+		
+		
+		button_5.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
+		button_5.setBounds(112, 0, 22, 22);
+		
+		
+		button_6.setFont(SWTResourceManager.getFont("SimSun-ExtB", 10, SWT.NORMAL));
+		button_6.setBounds(140, 0, 22, 22);
+		
+		
 		button_1.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				GC gc = e.gc;
@@ -246,5 +394,29 @@ public class SendForm {
 		});
 		btnNewButton.setText("\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C");
 
+	}
+	
+	void setColorButton() throws FileNotFoundException
+	{
+		Config conf=new Config().takeConfig();
+		int R = conf.getR();
+		int G = conf.getG();
+		int B = conf.getB();
+		 switch (R) {
+         case 0: 
+        	 switch(G)
+        	 {
+        	 	case 0:
+        	 		switch(B)
+        	 		{
+        	 			//case 
+        	 		}
+        	 }
+                  break;
+         case 255:  
+                  break;
+         default: 
+                  break;
+     }
 	}
 }
