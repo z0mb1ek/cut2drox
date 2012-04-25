@@ -62,6 +62,7 @@ public class SendForm {
 	 * @param tip 
 	 * @wbp.parser.entryPoint
 	 *///
+    /////qweqweqweqwe
 	public void open(Image image) {
 		display = Display.getDefault();
 		
