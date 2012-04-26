@@ -59,11 +59,11 @@ public class SendForm {
 	}
 	
 	/**
-	 * @param tip 
+	// * @param tip
 	 * @wbp.parser.entryPoint
 	 *///
     /////qweqweqweqwe
-	public void open(Image image) {
+	public void open(Image image) throws FileNotFoundException {
 		display = Display.getDefault();
 		
 		createContents(image);
@@ -76,7 +76,7 @@ public class SendForm {
 		}
 	}
 
-	protected void createContents(final Image image) {
+	protected void createContents(final Image image) throws FileNotFoundException {
 		shellForm = new Shell();
 		shellForm.setSize(378, 352);
 		shellForm.setText("SWT Application");
@@ -96,14 +96,15 @@ public class SendForm {
 		gd_composite_1.widthHint = 211;
 		gd_composite_1.heightHint = 22;
 		composite_1.setLayoutData(gd_composite_1);
-		
+
 		final Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE); //группа цветов
 		final Button button_1 = new Button(composite_1, SWT.TOGGLE);
 		final Button button_3 = new Button(composite_1, SWT.TOGGLE);
 		final Button button_4 = new Button(composite_1, SWT.TOGGLE);
 		final Button button_5 = new Button(composite_1, SWT.TOGGLE);
 		final Button button_6 = new Button(composite_1, SWT.TOGGLE);
-		
+        setColorButton(btnNewButton_3,button_4,button_3,button_1,button_5,button_6);
+
 		button_4.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -397,7 +398,7 @@ public class SendForm {
 
 	}
 	
-	void setColorButton() throws FileNotFoundException
+	void setColorButton(Button btnNewButton_3, Button button_4, Button button_3, Button button_1, Button button_5, Button button_6) throws FileNotFoundException
 	{
 		Config conf=new Config().takeConfig();
 		int R = conf.getR();
@@ -410,14 +411,66 @@ public class SendForm {
         	 	case 0:
         	 		switch(B)
         	 		{
-        	 			//case 
+                         case 0:
+                             btnNewButton_3.setSelection(true);
+                             break;
+                         case 255:
+                             button_4.setSelection(true);
+                             break;
+                         default:
+                             button_6.setSelection(true);
+                             break;
         	 		}
+                     break;
+                 case 128:
+                     switch (B)
+                     {
+                         case 0:
+                             button_3.setSelection(true);
+                             break;
+                         default:
+                             button_6.setSelection(true);
+                             break;
+                     }
+                     break;
+                 default:
+                     button_6.setSelection(true);
+                     break;
         	 }
                   break;
-         case 255:  
-                  break;
-         default: 
-                  break;
+         case 255:
+             switch (G)
+             {
+                 case 0:
+                     switch (B)
+                     {
+                         case 0:
+                             button_1.setSelection(true);
+                             break;
+                         default:
+                             button_6.setSelection(true);
+                             break;
+                     }
+                     break;
+                 case 255:
+                     switch (B)
+                     {
+                         case 255:
+                             button_5.setSelection(true);
+                             break;
+                         default:
+                             button_6.setSelection(true);
+                             break;
+                     }
+                     break;
+                 default:
+                     button_6.setSelection(true);
+                     break;
+             }
+               break;
+         default:
+             button_6.setSelection(true);
+             break;
      }
 	}
 }

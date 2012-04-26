@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Tracker;
 
 import ru.cut2drox.ui.SendForm;
 
+import java.io.FileNotFoundException;
+
 public class ScreenshotCapture {
 	
 	Image image;
@@ -71,8 +73,12 @@ public class ScreenshotCapture {
       				popup.dispose();
       			case SWT.MouseUp:
       				SendForm newForm = new SendForm();
-      	  	      	newForm.open(image);
-      	  	      	point = null;
+                      try {
+                          newForm.open(image);
+                      } catch (FileNotFoundException e1) {
+                          e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                      }
+                      point = null;
       	  	      	break;
       			}
             }
