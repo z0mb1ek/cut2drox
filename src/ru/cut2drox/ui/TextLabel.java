@@ -45,15 +45,15 @@ public class TextLabel extends Dialog {
 		return defaultFont;
 	}
 	
-	void setFont(FontData newFont) throws IOException
-	{
-		Config conf=new Config().takeConfig();
-		conf.setFont(newFont.getName());
-		conf.setFontSize(newFont.getHeight());
-		fontSize=newFont.getHeight();
-		conf.setFontStyle(newFont.getStyle());
-		conf.makeConfig();
-	}
+//	void setFont(FontData newFont) throws IOException
+//	{
+//		Config conf=new Config().takeConfig();
+//		conf.setFont(newFont.getName());
+//		conf.setFontSize(newFont.getHeight());
+//		fontSize=newFont.getHeight();
+//		conf.setFontStyle(newFont.getStyle());
+//		conf.makeConfig();
+//	}
 	
 	void setFontSize() throws IOException
 	{
@@ -200,16 +200,20 @@ public class TextLabel extends Dialog {
 		        FontData newFont = fd.open();
 		        if (newFont == null) return;
 		        font=new Font(display, newFont);
-		        try {
-					setFont(newFont);
-				} catch (IOException e) {e.printStackTrace();}
 		        RGB temp = fd.getRGB();
+		        fontSize=newFont.getHeight();
+		        conf.setFontSize(fontSize);
+		        conf.setFont(newFont.getName());
+		        conf.setFontStyle(newFont.getStyle());
 		        conf.setR(temp.red);
 		        conf.setG(temp.green);
 		        conf.setB(temp.blue);
 		        conf.makeConfig();
 				} catch (FileNotFoundException e1) {e1.printStackTrace();} catch (IOException e) {e.printStackTrace();}
 		        combo.setText(Integer.toString(fontSize));
+		        try {
+					SendForm.setColorButton();
+				} catch (FileNotFoundException e) {e.printStackTrace();}
 			}
 		});
 		btnNewButton_1.setBounds(212, 8, 75, 23);

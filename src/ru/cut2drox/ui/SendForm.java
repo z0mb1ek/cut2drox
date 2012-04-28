@@ -3,6 +3,7 @@ package ru.cut2drox.ui;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Listener;
@@ -25,6 +27,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.RGB;
+
 import com.dropbox.client2.exception.DropboxException;
 
 import ru.cut2drox.brain.Config;
@@ -43,6 +47,12 @@ public class SendForm {
 	Shell shellForm;
 	static Display display;
 	static TrayIcon ti;
+	static Button btnNewButton_3;
+	static Button button_1;
+	static Button button_3;
+	static Button button_4;
+	static Button button_5;
+	static Button button_6;
 	
 	public static void main(String[] args) {
 		display = new Display();
@@ -97,13 +107,13 @@ public class SendForm {
 		gd_composite_1.heightHint = 22;
 		composite_1.setLayoutData(gd_composite_1);
 
-		final Button btnNewButton_3 = new Button(composite_1, SWT.TOGGLE); //группа цветов
-		final Button button_1 = new Button(composite_1, SWT.TOGGLE);
-		final Button button_3 = new Button(composite_1, SWT.TOGGLE);
-		final Button button_4 = new Button(composite_1, SWT.TOGGLE);
-		final Button button_5 = new Button(composite_1, SWT.TOGGLE);
-		final Button button_6 = new Button(composite_1, SWT.TOGGLE);
-        setColorButton(btnNewButton_3,button_4,button_3,button_1,button_5,button_6);
+		btnNewButton_3 = new Button(composite_1, SWT.TOGGLE); //группа цветов
+		button_1 = new Button(composite_1, SWT.TOGGLE);
+		button_3 = new Button(composite_1, SWT.TOGGLE);
+		button_4 = new Button(composite_1, SWT.TOGGLE);
+		button_5 = new Button(composite_1, SWT.TOGGLE);
+		button_6 = new Button(composite_1, SWT.TOGGLE);
+        setColorButton();
 
 		button_4.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -151,6 +161,18 @@ public class SendForm {
 				button_4.setSelection(false);
 				button_5.setSelection(false);
 				button_6.setSelection(true);
+				
+				ColorDialog cd = new ColorDialog(shellForm);
+		        cd.setText("ColorDialog Demo");
+		        try {
+					Config conf=new Config().takeConfig();
+					cd.setRGB(new RGB(conf.getR(), conf.getG(), conf.getB()));
+					RGB newColor = cd.open();
+					conf.setR(newColor.red);
+					conf.setG(newColor.green);
+					conf.setB(newColor.blue);
+					conf.makeConfig();
+				} catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
 			}
 		});
 		
@@ -360,7 +382,8 @@ public class SendForm {
 					String partName = sdf.format(cal.getTime());
 					String nameImage = partName +".jpg";
 					String fullPath = ClassLoader.getSystemResource(".").getPath()+"images/"+nameImage;
-					//Проверять на папку и если нету создавать!!!!
+					File myFolder = new File(ClassLoader.getSystemResource(".").getPath()+"images");
+					myFolder.mkdir();
 					loader.save(fullPath, SWT.IMAGE_JPEG);
 					DBWrapper connection = new DBWrapper();
 					String imageShortURL = connection.sendImage(fullPath, nameImage);
@@ -398,8 +421,14 @@ public class SendForm {
 
 	}
 	
-	void setColorButton(Button btnNewButton_3, Button button_4, Button button_3, Button button_1, Button button_5, Button button_6) throws FileNotFoundException
+	public static void setColorButton() throws FileNotFoundException
 	{
+		btnNewButton_3.setSelection(false);
+		button_1.setSelection(false);
+		button_3.setSelection(false);
+		button_4.setSelection(false);
+		button_5.setSelection(false);
+		button_6.setSelection(false);
 		Config conf=new Config().takeConfig();
 		int R = conf.getR();
 		int G = conf.getG();
