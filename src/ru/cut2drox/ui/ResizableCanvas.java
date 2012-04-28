@@ -34,6 +34,11 @@ public class ResizableCanvas extends Canvas {
 	int canvasShiftX=0;
 	int canvasShiftY=0;
 	Font font;
+	int lineStartX=0;
+	int lineStartY=0;
+	int lineEndX=0;
+	int lineEndY=0;
+	int[] polArray={0,0,0,0,0,0};
 	
 	public ResizableCanvas(Composite arg0, int arg1,Display disp) {
 		super(arg0, arg1);
@@ -116,10 +121,15 @@ public class ResizableCanvas extends Canvas {
         try {
 			Config conf=new Config().takeConfig();
 			 gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));   //цвет
+			 gc.setBackground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));
 			} catch (FileNotFoundException e1) {e1.printStackTrace();}
        
         gc.setFont(font); 
         gc.drawText(s, textX, textY,true);
+        gc.setLineWidth(3);
+        gc.drawLine(lineStartX,lineStartY,lineEndX,lineEndY);
+        gc.fillPolygon(polArray);
+        gc.drawPolygon(polArray);
       }
     };
 	
@@ -152,6 +162,20 @@ public class ResizableCanvas extends Canvas {
     	this.font=font;
     	redraw();
     }
+    public void drawRLine(int x1,int y1,int x2,int y2)
+    {
+    	this.lineStartX=x1;
+    	this.lineStartY=y1;
+    	this.lineEndX=x2;
+    	this.lineEndY=y2;
+    	redraw();
+    }
+    public void drawRPolygon(int[] pointArray)
+    {
+    	this.polArray=pointArray;
+    	redraw();
+    }
+    
     public int getCanvasShiftX()
     {
     	return -canvasShiftX;
@@ -161,6 +185,8 @@ public class ResizableCanvas extends Canvas {
     {
     	return -canvasShiftY;
     }
+    
+    
     
 
 }

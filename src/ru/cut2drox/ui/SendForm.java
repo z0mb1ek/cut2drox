@@ -54,6 +54,9 @@ public class SendForm {
 	static Button button_5;
 	static Button button_6;
 	
+	int tempLineStartX = 0;
+	int tempLineStartY = 0;
+	
 	public static void main(String[] args) {
 		display = new Display();
 	    shell = new Shell(display);
@@ -163,7 +166,7 @@ public class SendForm {
 				button_6.setSelection(true);
 				
 				ColorDialog cd = new ColorDialog(shellForm);
-		        cd.setText("ColorDialog Demo");
+		        cd.setText("Выбор цвета");
 		        try {
 					Config conf=new Config().takeConfig();
 					cd.setRGB(new RGB(conf.getR(), conf.getG(), conf.getB()));
@@ -173,6 +176,9 @@ public class SendForm {
 					conf.setB(newColor.blue);
 					conf.makeConfig();
 				} catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+		        try {
+					setColorButton();
+				} catch (FileNotFoundException e) {e.printStackTrace();}
 			}
 		});
 		
@@ -359,7 +365,66 @@ public class SendForm {
 		btnNewButton_1.setBounds(0, 0, 25, 25);
 		btnNewButton_1.setText("");
 		
+
 		Button btnNewButton_2 = new Button(composite, SWT.NONE);
+		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+//-----------------------------------------------------------------------------------------------------------------------------------	
+				Listener listener = new Listener() {
+					public void handleEvent(Event e) {
+						switch (e.type) {
+//							case SWT.MouseEnter:
+//								canvas.drawRText(temp,e.x,e.y-17,font);
+//								break;
+							case SWT.MouseDown:
+//								GC gc = new GC(image);
+//								gc.setFont(font);
+//								try {
+//								Config conf=new Config().takeConfig();
+//								gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
+//								} catch (FileNotFoundException e1) {e1.printStackTrace();}
+//								gc.drawText(temp, e.x-canvas.canvasShiftX,e.y-17-canvas.canvasShiftY,true);
+//								gc.dispose();	
+								tempLineStartX=e.x;
+								tempLineStartY=e.y;
+								canvas.addListener(SWT.MouseMove, this);
+								break;
+							case SWT.MouseMove:
+//								canvas.drawRText(temp,e.x,e.y-17,font);
+								
+								
+								canvas.drawRLine(tempLineStartX, tempLineStartY, e.x, e.y);
+								
+								
+								double Angle=180*Math.atan2(e.y-tempLineStartY, e.x-tempLineStartX)/Math.PI;
+								double f1x2 , f1y2, f2x2, f2y2;
+					            f1x2 = e.x+Math.round((16*Math.cos(Math.PI*(Angle+160)/180)));
+					            f1y2 = e.y+Math.round((16*Math.sin(Math.PI*(Angle+160)/180)));
+					            f2x2 = e.x+Math.round((16*Math.cos(Math.PI*(Angle-160)/180)));
+					            f2y2 = e.y+Math.round((16*Math.sin(Math.PI*(Angle-160)/180)));
+
+								int[] arrow = { e.x, e.y,  (int) f2x2, (int) f2y2,(int) f1x2, (int) f1y2};
+								canvas.drawRPolygon(arrow);
+								break;
+							case SWT.MouseUp:
+//								canvas.drawRText("",-1,-1,font); //убираем мышку с канваса
+//								canvas.removeListener(SWT.MouseMove, this);
+//								canvas.removeListener(SWT.MouseDown, this);
+//								canvas.removeListener(SWT.MouseUp, this);
+//								canvas.removeListener(SWT.MouseEnter, this);
+//								canvas.redraw();
+								break;
+						}
+					}
+				};
+				canvas.addListener(SWT.MouseDown, listener);
+				
+				canvas.addListener(SWT.MouseUp, listener);
+				canvas.addListener(SWT.MouseEnter, listener);
+//-------------------------------------------------------------------------------------------------------------------------------
+			}
+		});
 		btnNewButton_2.setBounds(0, 31, 25, 25);
 		btnNewButton_2.setText("");
 		

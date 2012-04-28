@@ -1,7 +1,7 @@
 !!ru.cut2drox.brain.Config
 appKey: e2ccjhyrl799xgy
 appSecret: 0aqphohzhxuxpop
-b: 255
+b: 0
 firstConnectToDB: 1
 font: French Script MT
 fontSize: 24
