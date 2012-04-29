@@ -145,6 +145,7 @@ public class TextLabel extends Dialog {
 									break;
 								case SWT.MouseDown:
 									GC gc = new GC(image);
+									gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
 									gc.setFont(font);
 									try {
 									Config conf=new Config().takeConfig();

@@ -107,6 +107,7 @@ public class ResizableCanvas extends Canvas {
     Listener pLis = new Listener() {
       public void handleEvent(Event e) {
         GC gc = e.gc;
+        gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
 		gc.drawImage(image, origin.x, origin.y);
         Rectangle rect = image.getBounds();
         Rectangle client = getClientArea();
