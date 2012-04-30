@@ -2,6 +2,7 @@ package ru.cut2drox.ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Stack;
 
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -73,9 +74,9 @@ public class TextLabel extends Dialog {
 	 * @wbp.parser.entryPoint
 	 */
 
-	public Object open(final ResizableCanvas canvas,final Image image) throws FileNotFoundException {
+	public Object open(final ResizableCanvas canvas,final Image image,Stack images) throws FileNotFoundException {
 		Display display = getParent().getDisplay();
-		createContents(canvas,image,display);
+		createContents(canvas,image,display,images);
 		shlEe.open();
 		shlEe.layout();
 		
@@ -87,7 +88,7 @@ public class TextLabel extends Dialog {
 		return result;
 	}
 
-	private void createContents(final ResizableCanvas canvas,final Image image,final Display display) throws FileNotFoundException {
+	private void createContents(final ResizableCanvas canvas,final Image image,final Display display,final Stack images) throws FileNotFoundException {
 		shlEe = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		shlEe.setSize(303, 182);
 		shlEe.setText("Текстовая метка");
@@ -137,6 +138,7 @@ public class TextLabel extends Dialog {
 				shlEe.dispose();
 				if(!temp.isEmpty())
 				{
+					images.push(new Image(display,image,SWT.IMAGE_COPY));
 					Listener listener = new Listener() {
 						public void handleEvent(Event e) {
 							switch (e.type) {
@@ -185,9 +187,6 @@ public class TextLabel extends Dialog {
 		Label label_1 = new Label(shlEe, SWT.NONE);
 		label_1.setBounds(57, 11, 91, 15);
 		label_1.setText("Размер шрифта:");
-		
-		
-		
 		
 		Button btnNewButton_1 = new Button(shlEe, SWT.NONE);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {

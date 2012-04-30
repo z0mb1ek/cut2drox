@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Stack;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -21,6 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.ImageTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -61,6 +65,12 @@ public class SendForm {
 	
 	Listener printArrowlistener;
 	
+	Image currentImage;
+	
+	Stack images;
+	
+	ResizableCanvas canvas;
+	
 	public static void main(String[] args) {
 		display = new Display();
 	    shell = new Shell(display);
@@ -94,6 +104,10 @@ public class SendForm {
 	}
 
 	protected void createContents(final Image image) throws FileNotFoundException {
+
+		currentImage = image;
+		images=new Stack();
+		
 		shellForm = new Shell();
 		shellForm.setSize(378, 352);
 		shellForm.setText("SWT Application");
@@ -102,8 +116,8 @@ public class SendForm {
 		Monitor[] list = display.getMonitors();
 		org.eclipse.swt.graphics.Rectangle client = shellForm.getBounds();
 		org.eclipse.swt.graphics.Rectangle screen = list[0].getBounds();
-		client.width=image.getBounds().width+70; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
-		client.height=image.getBounds().height+117;
+		client.width=currentImage.getBounds().width+70; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
+		client.height=currentImage.getBounds().height+117;
 		client.x = screen.width/2 -client.width/2;
 		client.y = screen.height/2 - client.height/2;
 		shellForm.setBounds(client);
@@ -123,6 +137,8 @@ public class SendForm {
         setColorButton();
         
         printArrowlistener=new Listener(){public void handleEvent(Event arg0) {}};
+        
+        
 
 		button_4.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -319,20 +335,29 @@ public class SendForm {
 		});
 		
 		Button button_2 = new Button(shellForm, SWT.NONE);
-		button_2.setVisible(false);
+		button_2.setImage(SWTResourceManager.getImage("D:\\undo.png"));
+		//button_2.setVisible(false);
 		button_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				if(!images.isEmpty())
+				{
+					Image temp = (Image) images.pop();
+					canvas.setImage(temp);
+					currentImage = temp;
+					canvas.redraw();
+				}
 			}
 		});
+		
 		GridData gd_button_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_button_2.widthHint = 25;
 		button_2.setLayoutData(gd_button_2);
 		button_2.setText("");
 		
-		final ResizableCanvas canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL,display);
+		canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL,display);
 		
-		canvas.setImage(image);
+		canvas.setImage(currentImage);
 		GridData gd_canvas = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_canvas.heightHint = 1;
 		gd_canvas.widthHint = 1;
@@ -344,13 +369,13 @@ public class SendForm {
 		    public void handleEvent (Event e) {
 		    	int i=shellForm.getClientArea().width-38;
 		    	int j=shellForm.getClientArea().height-62;
-		    if(i>image.getBounds().width+15)
+		    if(i>currentImage.getBounds().width+15)
 		    {
-		    	i=image.getBounds().width+17;
+		    	i=currentImage.getBounds().width+17;
 		    }
-		    if(j>image.getBounds().height+15)
+		    if(j>currentImage.getBounds().height+15)
 		    {
-		    	j=image.getBounds().height+17;
+		    	j=currentImage.getBounds().height+17;
 		    }
 		    	canvas.setRBounds(5, 30, i, j);
 		    } 
@@ -376,7 +401,7 @@ public class SendForm {
 				btnNewButton_2.setSelection(false);
 				TextLabel tl = new TextLabel(shellForm,SWT.DIALOG_TRIM);
 				try {
-					tl.open(canvas,image); 
+					tl.open(canvas,currentImage,images); 
 					} catch (FileNotFoundException e) {e.printStackTrace();}
 			}
 		});
@@ -389,6 +414,7 @@ public class SendForm {
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				
 				btnNewButton_2.setSelection(true);
 				printArrowlistener = new Listener() {
 					
@@ -419,19 +445,20 @@ public class SendForm {
 								canvas.removeListener(SWT.MouseMove, this);
 								if(tempLineStartX!=e.x && tempLineStartY!=e.y)
 								{
-								GC gc = new GC(image);
-								gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
-								try {
-								Config conf=new Config().takeConfig();
-								gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
-								gc.setBackground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));
-								} catch (FileNotFoundException e1) {e1.printStackTrace();}
-								gc.setLineWidth(3);
-								gc.drawLine(tempLineStartX-canvas.canvasShiftX, tempLineStartY-canvas.canvasShiftY, e.x-canvas.canvasShiftX, e.y-canvas.canvasShiftY);
-								int arrow1[] = {e.x-canvas.canvasShiftX, e.y-canvas.canvasShiftY,  (int) f2x2-canvas.canvasShiftX, (int) f2y2-canvas.canvasShiftY,(int) f1x2-canvas.canvasShiftX, (int) f1y2-canvas.canvasShiftY};
-								gc.drawPolygon(arrow1);
-								gc.fillPolygon(arrow1);
-								gc.dispose();	
+									images.push(new Image(display,currentImage,SWT.IMAGE_COPY));
+									GC gc = new GC(currentImage);
+									gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
+									try {
+										Config conf=new Config().takeConfig();
+										gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
+										gc.setBackground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));
+									} catch (FileNotFoundException e1) {e1.printStackTrace();}
+									gc.setLineWidth(3);
+									gc.drawLine(tempLineStartX-canvas.canvasShiftX, tempLineStartY-canvas.canvasShiftY, e.x-canvas.canvasShiftX, e.y-canvas.canvasShiftY);
+									int arrow1[] = {e.x-canvas.canvasShiftX, e.y-canvas.canvasShiftY,  (int) f2x2-canvas.canvasShiftX, (int) f2y2-canvas.canvasShiftY,(int) f1x2-canvas.canvasShiftX, (int) f1y2-canvas.canvasShiftY};
+									gc.drawPolygon(arrow1);
+									gc.fillPolygon(arrow1);
+									gc.dispose();	
 								}
 								break;
 						}
@@ -439,16 +466,6 @@ public class SendForm {
 				};
 				canvas.addListener(SWT.MouseDown, printArrowlistener);
 				canvas.addListener(SWT.MouseUp, printArrowlistener);
-				
-//				FocusListener fListener = new FocusListener() {
-//				      public void focusGained(FocusEvent event) {}
-//
-//				      public void focusLost(FocusEvent event) {
-//						canvas.removeListener(SWT.MouseDown, listener);
-//						canvas.removeListener(SWT.MouseUp, listener);
-//				      }
-//				    };
-//				btnNewButton_2.addFocusListener(fListener);
 			}
 		});
 		btnNewButton_2.setBounds(0, 31, 25, 25);
@@ -475,10 +492,16 @@ public class SendForm {
 		button_7.setText("");
 		button_7.setImage(SWTResourceManager.getImage("D:\\square.png"));
 		button_7.setBounds(0, 93, 25, 25);
-        //-----------------------------------  
 		
-		Button btnNewButton = new Button(shellForm, SWT.NONE);
-		btnNewButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
+		Composite composite_2 = new Composite(shellForm, SWT.NONE);
+		GridData gd_composite_2 = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1);
+		gd_composite_2.widthHint = 119;
+		gd_composite_2.heightHint = 27;
+		composite_2.setLayoutData(gd_composite_2);
+		//-----------------------------------  
+		
+		Button btnNewButton = new Button(composite_2, SWT.NONE);
+		btnNewButton.setBounds(0, 0, 70, 25);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -487,7 +510,7 @@ public class SendForm {
 					Calendar cal = Calendar.getInstance();
 					SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 					ImageLoader loader = new ImageLoader();
-					loader.data = new ImageData[] {image.getImageData()};
+					loader.data = new ImageData[] {currentImage.getImageData()};
 					String partName = sdf.format(cal.getTime());
 					String nameImage = partName +".jpg";
 					String fullPath = ClassLoader.getSystemResource(".").getPath()+"images/"+nameImage;
@@ -527,6 +550,29 @@ public class SendForm {
 			}
 		});
 		btnNewButton.setText("\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C");
+		
+		Button button_8 = new Button(composite_2, SWT.NONE);
+		button_8.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+			}
+		});
+		button_8.setText("");
+		button_8.setImage(SWTResourceManager.getImage("D:\\save.png"));
+		button_8.setBounds(69, 0, 25, 25);
+		
+		Button button_9 = new Button(composite_2, SWT.NONE);
+		button_9.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Clipboard cl = new Clipboard(Display.getDefault()); 
+				cl.setContents(new Object[]{currentImage.getImageData()}, new 
+				Transfer[]{ImageTransfer.getInstance()}); 
+			}
+		});
+		button_9.setText("");
+		button_9.setImage(SWTResourceManager.getImage("D:\\copy.png"));
+		button_9.setBounds(93, 0, 25, 25);
 
 	}
 	
