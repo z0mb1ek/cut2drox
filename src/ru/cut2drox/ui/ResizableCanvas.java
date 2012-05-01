@@ -38,6 +38,14 @@ public class ResizableCanvas extends Canvas {
 	int lineStartY=0;
 	int lineEndX=0;
 	int lineEndY=0;
+	int circleStartX=0;
+	int circleStartY=0;
+	int circleHeight=0;
+	int circleWidth=0;
+	int squareStartX=0;
+	int squareStartY=0;
+	int squareHeight=0;
+	int squareWidth=0;
 	int[] polArray={0,0,0,0,0,0};
 	
 	public ResizableCanvas(Composite arg0, int arg1,Display disp) {
@@ -131,6 +139,8 @@ public class ResizableCanvas extends Canvas {
         gc.drawLine(lineStartX,lineStartY,lineEndX,lineEndY);
         gc.fillPolygon(polArray);
         gc.drawPolygon(polArray);
+        gc.drawOval(circleStartX, circleStartY,circleWidth, circleHeight);
+        gc.drawRectangle(squareStartX, squareStartY, squareWidth, squareHeight);
       }
     };
 	
@@ -176,7 +186,22 @@ public class ResizableCanvas extends Canvas {
     	this.polArray=pointArray;
     	redraw();
     }
-    
+    public void drawROval(int x,int y,int width,int height)
+    {
+    	this.circleStartX=x;
+    	this.circleStartY=y;
+    	this.circleHeight=height;
+    	this.circleWidth=width;
+    	redraw();
+    }
+    public void drawRRectangle(int x,int y,int width,int height)
+    {
+    	this.squareStartX=x;
+    	this.squareStartY=y;
+    	this.squareHeight=height;
+    	this.squareWidth=width;
+    	redraw();
+    }
     public int getCanvasShiftX()
     {
     	return -canvasShiftX;

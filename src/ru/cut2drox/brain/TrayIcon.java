@@ -46,10 +46,10 @@ public class TrayIcon {
 		
 	}
 	
-    public void showBalloon(Shell shell)
+    public void showBalloon(Shell shell,String s)
     {
     	this.tip.setText("Cut2Drox");
-    	this.tip.setMessage("Файл загружен.Ссылка скопирована в буфер обмена");
+    	this.tip.setMessage(s);
     	this.tip.setVisible(true);
     }
     

@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.layout.GridData;
@@ -62,8 +63,14 @@ public class SendForm {
 	
 	int tempLineStartX = 0;
 	int tempLineStartY = 0;
+	int tempCircleStartX = 0;
+	int tempCircleStartY = 0;
+	int tempSquareStartX = 0;
+	int tempSquareStartY = 0;
 	
-	Listener printArrowlistener;
+	Listener printArrowListener;
+	Listener printCircleListener;
+	Listener printSquareListener;
 	
 	Image currentImage;
 	
@@ -136,7 +143,8 @@ public class SendForm {
 		button_6 = new Button(composite_1, SWT.TOGGLE);
         setColorButton();
         
-        printArrowlistener=new Listener(){public void handleEvent(Event arg0) {}};
+        printArrowListener=new Listener(){public void handleEvent(Event arg0) {}};
+        printCircleListener=new Listener(){public void handleEvent(Event arg0) {}};
         
         
 
@@ -355,7 +363,7 @@ public class SendForm {
 		button_2.setLayoutData(gd_button_2);
 		button_2.setText("");
 		
-		canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL,display);
+		canvas = new ResizableCanvas(shellForm,  SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL  | SWT.H_SCROLL | SWT.DOUBLE_BUFFERED,display);
 		
 		canvas.setImage(currentImage);
 		GridData gd_canvas = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -390,15 +398,22 @@ public class SendForm {
 		
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
 		final Button btnNewButton_2 = new Button(composite, SWT.TOGGLE);
+		final Button button = new Button(composite, SWT.TOGGLE);
+		final Button button_7 = new Button(composite, SWT.TOGGLE);
 		
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				canvas.removeListener(SWT.MouseDown, printArrowlistener);
-				canvas.removeListener(SWT.MouseUp, printArrowlistener);
-				canvas.removeListener(SWT.MouseMove, printArrowlistener);
+				canvas.removeListener(SWT.MouseDown, printArrowListener);
+				canvas.removeListener(SWT.MouseUp, printArrowListener);
+				canvas.removeListener(SWT.MouseDown, printCircleListener);
+				canvas.removeListener(SWT.MouseUp, printCircleListener);
+				canvas.removeListener(SWT.MouseDown, printSquareListener);
+				canvas.removeListener(SWT.MouseUp, printSquareListener);
 				
 				btnNewButton_2.setSelection(false);
+				button_7.setSelection(false);
+				button.setSelection(false);
 				TextLabel tl = new TextLabel(shellForm,SWT.DIALOG_TRIM);
 				try {
 					tl.open(canvas,currentImage,images); 
@@ -414,9 +429,14 @@ public class SendForm {
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				
+				canvas.removeListener(SWT.MouseDown, printCircleListener);
+				canvas.removeListener(SWT.MouseUp, printCircleListener);
+				canvas.removeListener(SWT.MouseDown, printSquareListener);
+				canvas.removeListener(SWT.MouseUp, printSquareListener);
 				btnNewButton_2.setSelection(true);
-				printArrowlistener = new Listener() {
+				button.setSelection(false);
+				button_7.setSelection(false);
+				printArrowListener = new Listener() {
 					
 					double f1x2 , f1y2, f2x2, f2y2;
 					public void handleEvent(Event e) {
@@ -443,7 +463,7 @@ public class SendForm {
 								canvas.drawRLine(0, 0, 0, 0);
 								canvas.drawRPolygon(temp);
 								canvas.removeListener(SWT.MouseMove, this);
-								if(tempLineStartX!=e.x && tempLineStartY!=e.y)
+								if(tempLineStartX!=e.x || tempLineStartY!=e.y)
 								{
 									images.push(new Image(display,currentImage,SWT.IMAGE_COPY));
 									GC gc = new GC(currentImage);
@@ -464,29 +484,113 @@ public class SendForm {
 						}
 					}
 				};
-				canvas.addListener(SWT.MouseDown, printArrowlistener);
-				canvas.addListener(SWT.MouseUp, printArrowlistener);
+				canvas.addListener(SWT.MouseDown, printArrowListener);
+				canvas.addListener(SWT.MouseUp, printArrowListener);
 			}
 		});
 		btnNewButton_2.setBounds(0, 31, 25, 25);
 		btnNewButton_2.setText("");
 		
 		
-		
-		Button button = new Button(composite, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				canvas.removeListener(SWT.MouseDown, printArrowListener);
+				canvas.removeListener(SWT.MouseUp, printArrowListener);
+				canvas.removeListener(SWT.MouseDown, printSquareListener);
+				canvas.removeListener(SWT.MouseUp, printSquareListener);
+				button.setSelection(true);
+				btnNewButton_2.setSelection(false);
+				button_7.setSelection(false);
+				printCircleListener = new Listener() {
+					public void handleEvent(Event e) {
+						switch (e.type) {
+							case SWT.MouseDown:
+								tempCircleStartX=e.x;
+								tempCircleStartY=e.y;
+								canvas.addListener(SWT.MouseMove, this);
+								break;
+							case SWT.MouseMove:
+								canvas.drawROval(tempCircleStartX, tempCircleStartY, e.x-tempCircleStartX, e.y-tempCircleStartY);
+								break;
+							case SWT.MouseUp:
+								canvas.drawROval(0, 0, 0, 0);
+								canvas.removeListener(SWT.MouseMove, this);
+								if(tempCircleStartX!=e.x || tempCircleStartY!=e.y)
+								{
+									images.push(new Image(display,currentImage,SWT.IMAGE_COPY));
+									GC gc = new GC(currentImage);
+									gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
+									try {
+										Config conf=new Config().takeConfig();
+										gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
+										gc.setBackground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));
+									} catch (FileNotFoundException e1) {e1.printStackTrace();}
+									gc.setLineWidth(3);
+									gc.drawOval(tempCircleStartX-canvas.canvasShiftX, tempCircleStartY-canvas.canvasShiftY, e.x-tempCircleStartX, e.y-tempCircleStartY);
+									gc.dispose();	
+								}
+								break;
+						}
+					}
+				};
+				canvas.addListener(SWT.MouseDown, printCircleListener);
+				canvas.addListener(SWT.MouseUp, printCircleListener);
+				
 			}
 		});
 		button.setText("");
 		button.setImage(SWTResourceManager.getImage("D:\\circle.png"));
 		button.setBounds(0, 62, 25, 25);
 		
-		Button button_7 = new Button(composite, SWT.NONE);
+		
 		button_7.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				canvas.removeListener(SWT.MouseDown, printArrowListener);
+				canvas.removeListener(SWT.MouseUp, printArrowListener);
+				canvas.removeListener(SWT.MouseDown, printCircleListener);
+				canvas.removeListener(SWT.MouseUp, printCircleListener);
+				
+				button_7.setSelection(true);
+				btnNewButton_2.setSelection(false);
+				button.setSelection(false);
+				
+				printSquareListener = new Listener() {
+					public void handleEvent(Event e) {
+						switch (e.type) {
+							case SWT.MouseDown:
+								tempSquareStartX=e.x;
+								tempSquareStartY=e.y;
+								canvas.addListener(SWT.MouseMove, this);
+								break;
+							case SWT.MouseMove:
+								canvas.drawRRectangle(tempSquareStartX, tempSquareStartY, e.x-tempSquareStartX, e.y-tempSquareStartY);
+								break;
+							case SWT.MouseUp:
+								canvas.drawRRectangle(0, 0, 0, 0);
+								canvas.removeListener(SWT.MouseMove, this);
+								if(tempSquareStartX!=e.x || tempSquareStartY!=e.y)
+								{
+									images.push(new Image(display,currentImage,SWT.IMAGE_COPY));
+									GC gc = new GC(currentImage);
+									gc.setAntialias(SWT.ON); 		//СГЛАЖИВАНИЕ!!!
+									try {
+										Config conf=new Config().takeConfig();
+										gc.setForeground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));  //цвет 
+										gc.setBackground(SWTResourceManager.getColor(new RGB(conf.getR(),conf.getG(),conf.getB())));
+									} catch (FileNotFoundException e1) {e1.printStackTrace();}
+									gc.setLineWidth(3);
+									gc.drawRectangle(tempSquareStartX-canvas.canvasShiftX, tempSquareStartY-canvas.canvasShiftY, e.x-tempSquareStartX, e.y-tempSquareStartY);
+									gc.dispose();	
+								}
+								break;
+						}
+					}
+				};
+				canvas.addListener(SWT.MouseDown, printSquareListener);
+				canvas.addListener(SWT.MouseUp, printSquareListener);
+				
 			}
 		});
 		button_7.setText("");
@@ -498,7 +602,6 @@ public class SendForm {
 		gd_composite_2.widthHint = 119;
 		gd_composite_2.heightHint = 27;
 		composite_2.setLayoutData(gd_composite_2);
-		//-----------------------------------  
 		
 		Button btnNewButton = new Button(composite_2, SWT.NONE);
 		btnNewButton.setBounds(0, 0, 70, 25);
@@ -513,14 +616,16 @@ public class SendForm {
 					loader.data = new ImageData[] {currentImage.getImageData()};
 					String partName = sdf.format(cal.getTime());
 					String nameImage = partName +".jpg";
-					String fullPath = ClassLoader.getSystemResource(".").getPath()+"images/"+nameImage;
-					File myFolder = new File(ClassLoader.getSystemResource(".").getPath()+"images");
-					myFolder.mkdir();
-					loader.save(fullPath, SWT.IMAGE_JPEG);
+					String fullPath = ClassLoader.getSystemResource(".").getPath()+nameImage;
+					
+//					File myFolder = new File(ClassLoader.getSystemResource(".").getPath()+"images");		//пока папка не нужна
+//					myFolder.mkdir();
+					
+					loader.save(fullPath, SWT.IMAGE_PNG);
 					DBWrapper connection = new DBWrapper();
 					String imageShortURL = connection.sendImage(fullPath, nameImage);
 					
-//					//--------govnokod------------------
+//					
 //					String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
 //							"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" +
 //							"<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\" />" +
@@ -535,8 +640,10 @@ public class SendForm {
 					StringSelection ss = new StringSelection(imageShortURL);
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 					
-					ti.showBalloon(shell);
-					//----------------------------------	
+					ti.showBalloon(shell,"Файл загружен.Ссылка скопирована в буфер обмена");
+					
+					File f = new File(fullPath);
+					f.delete();
 		  
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -555,6 +662,14 @@ public class SendForm {
 		button_8.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+			    dialog.setFilterNames(new String[] { "JPEG images" });
+			    dialog.setFilterExtensions(new String[] { "*.jpg"});
+			    dialog.open();
+				ImageLoader loader = new ImageLoader();
+				loader.data = new ImageData[] {currentImage.getImageData()};
+				loader.save(dialog.getFilterPath()+ "\\"+dialog.getFileName(), SWT.IMAGE_PNG);
+				ti.showBalloon(shell,"Файл сохранен на жесткий диск.");
 			}
 		});
 		button_8.setText("");
@@ -568,6 +683,7 @@ public class SendForm {
 				Clipboard cl = new Clipboard(Display.getDefault()); 
 				cl.setContents(new Object[]{currentImage.getImageData()}, new 
 				Transfer[]{ImageTransfer.getInstance()}); 
+				ti.showBalloon(shell,"Файл скопирован в буфер обмена.");
 			}
 		});
 		button_9.setText("");
