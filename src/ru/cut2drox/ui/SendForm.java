@@ -46,6 +46,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.Point;
 
 public class SendForm {
 
@@ -116,6 +117,7 @@ public class SendForm {
 		images=new Stack();
 		
 		shellForm = new Shell();
+		shellForm.setMinimumSize(new Point(277, 285));
 		shellForm.setSize(378, 352);
 		shellForm.setText("SWT Application");
 		shellForm.setLayout(new GridLayout(2, false));
@@ -136,15 +138,23 @@ public class SendForm {
 		composite_1.setLayoutData(gd_composite_1);
 
 		btnNewButton_3 = new Button(composite_1, SWT.TOGGLE); //группа цветов
+		btnNewButton_3.setToolTipText("черный цвет");
 		button_1 = new Button(composite_1, SWT.TOGGLE);
+		button_1.setToolTipText("красный цвет");
 		button_3 = new Button(composite_1, SWT.TOGGLE);
+		button_3.setToolTipText("зеленый цвет");
 		button_4 = new Button(composite_1, SWT.TOGGLE);
+		button_4.setToolTipText("синий цвет");
 		button_5 = new Button(composite_1, SWT.TOGGLE);
+		button_5.setToolTipText("белый цвет");
 		button_6 = new Button(composite_1, SWT.TOGGLE);
+		button_6.setToolTipText("выбрат цвет из палитры");
+		
         setColorButton();
         
         printArrowListener=new Listener(){public void handleEvent(Event arg0) {}};
         printCircleListener=new Listener(){public void handleEvent(Event arg0) {}};
+        printSquareListener=new Listener(){public void handleEvent(Event arg0) {}};
         
         
 
@@ -266,6 +276,7 @@ public class SendForm {
 		
 		
 		
+		
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -343,8 +354,8 @@ public class SendForm {
 		});
 		
 		Button button_2 = new Button(shellForm, SWT.NONE);
+		button_2.setToolTipText("Отменить действие");
 		button_2.setImage(SWTResourceManager.getImage("D:\\undo.png"));
-		//button_2.setVisible(false);
 		button_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -377,16 +388,21 @@ public class SendForm {
 		    public void handleEvent (Event e) {
 		    	int i=shellForm.getClientArea().width-38;
 		    	int j=shellForm.getClientArea().height-62;
+		    	int posx=5;
+		    	int posy=30;
 		    if(i>currentImage.getBounds().width+15)
 		    {
+		    	posx=(i-currentImage.getBounds().width)/2;
 		    	i=currentImage.getBounds().width+17;
+		    	
 		    }
 		    if(j>currentImage.getBounds().height+15)
 		    {
+		    	posy=(j-currentImage.getBounds().height+45)/2;
 		    	j=currentImage.getBounds().height+17;
 		    }
-		    	canvas.setRBounds(5, 30, i, j);
-		    } 
+		    	canvas.setRBounds(posx, posy, i, j);
+		    }  
 		});
 		
 		
@@ -397,9 +413,13 @@ public class SendForm {
 		composite.setLayoutData(gd_composite);
 		
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
+		btnNewButton_1.setToolTipText("Сделать надпись");
 		final Button btnNewButton_2 = new Button(composite, SWT.TOGGLE);
+		btnNewButton_2.setToolTipText("Нанести стрелку");
 		final Button button = new Button(composite, SWT.TOGGLE);
+		button.setToolTipText("Нарисовать овал");
 		final Button button_7 = new Button(composite, SWT.TOGGLE);
+		button_7.setToolTipText("Нарисовать прямоугольник");
 		
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -659,6 +679,7 @@ public class SendForm {
 		btnNewButton.setText("\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C");
 		
 		Button button_8 = new Button(composite_2, SWT.NONE);
+		button_8.setToolTipText("Сохранить рисунок на диск");
 		button_8.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -677,6 +698,7 @@ public class SendForm {
 		button_8.setBounds(69, 0, 25, 25);
 		
 		Button button_9 = new Button(composite_2, SWT.NONE);
+		button_9.setToolTipText("Копировать рисунок в буффер обмена");
 		button_9.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
