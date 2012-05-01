@@ -15,12 +15,13 @@ public class TrayIcon {
 	Shell sl;
 	ToolTip tip;
 	TrayItem item;
+	String picPath = ClassLoader.getSystemResource(".").getPath()+"pic\\";
 	
 	public TrayIcon(final Display display,final Shell shell)
 	{
 		tip = new ToolTip(shell, SWT.BALLOON | SWT.ICON_INFORMATION);
 		//Image trayImage = new Image(display, 16, 16);
-		Image trayImage = new Image(display, "D:\\cut6.png");
+		Image trayImage = new Image(display, picPath+"trayIcon.png");
 		final Tray tray = display.getSystemTray();
 	    if (tray == null) {
 	      System.out.println("The system tray is not available");
@@ -53,11 +54,11 @@ public class TrayIcon {
     	this.tip.setVisible(true);
     }
     
-    public void setIcon()
-    {
-    	Image trayImage = new Image(disp, "D:/2.png");
-    	item.setImage(trayImage);
-    }
+//    public void setIcon()
+//    {
+//    	Image trayImage = new Image(disp, "D:/2.png");
+//    	item.setImage(trayImage);
+//    }
     
 }
  

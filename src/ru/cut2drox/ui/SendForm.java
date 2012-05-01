@@ -75,6 +75,8 @@ public class SendForm {
 	
 	ResizableCanvas canvas;
 	
+	String picPath = ClassLoader.getSystemResource(".").getPath()+"pic\\";
+	
 	public static void main(String[] args) {
 		display = new Display();
 	    shell = new Shell(display);
@@ -114,7 +116,7 @@ public class SendForm {
 		shellForm = new Shell();
 		shellForm.setMinimumSize(new Point(277, 285));
 		shellForm.setSize(378, 352);
-		shellForm.setText("SWT Application");
+		shellForm.setText("Cut2drox");
 		shellForm.setLayout(new GridLayout(2, false));
 		
 		Monitor[] list = display.getMonitors();
@@ -355,7 +357,7 @@ public class SendForm {
 		
 		Button button_2 = new Button(shellForm, SWT.NONE);
 		button_2.setToolTipText("Отменить действие");
-		button_2.setImage(SWTResourceManager.getImage("D:\\undo.png"));
+		button_2.setImage(SWTResourceManager.getImage(picPath+"undo.png"));
 		button_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -446,12 +448,12 @@ public class SendForm {
 					} catch (FileNotFoundException e) {e.printStackTrace();}
 			}
 		});
-		btnNewButton_1.setImage(SWTResourceManager.getImage("D:\\pencil.png"));
+		btnNewButton_1.setImage(SWTResourceManager.getImage(picPath+"pencil.png"));
 		btnNewButton_1.setBounds(0, 0, 25, 25);
 		btnNewButton_1.setText("");
 		
 
-		btnNewButton_2.setImage(SWTResourceManager.getImage("D:\\arrow.png"));
+		btnNewButton_2.setImage(SWTResourceManager.getImage(picPath+"arrow.png"));
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -566,7 +568,7 @@ public class SendForm {
 			}
 		});
 		button.setText("");
-		button.setImage(SWTResourceManager.getImage("D:\\circle.png"));
+		button.setImage(SWTResourceManager.getImage(picPath+"circle.png"));
 		button.setBounds(0, 62, 25, 25);
 		
 		
@@ -620,7 +622,7 @@ public class SendForm {
 			}
 		});
 		button_7.setText("");
-		button_7.setImage(SWTResourceManager.getImage("D:\\square.png"));
+		button_7.setImage(SWTResourceManager.getImage(picPath+"square.png"));
 		button_7.setBounds(0, 93, 25, 25);
 		
 		Composite composite_2 = new Composite(shellForm, SWT.NONE);
@@ -667,19 +669,8 @@ public class SendForm {
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 					
 					ti.showBalloon(shell,"Файл загружен.Ссылка скопирована в буфер обмена");
-					
-					File f = new File(fullPath);
-					f.delete();
 		  
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (DropboxException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
+				} catch (MalformedURLException e) {e.printStackTrace();} catch (DropboxException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();} catch (URISyntaxException e) {e.printStackTrace();}
 			}
 		});
 		btnNewButton.setText("\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C");
@@ -704,7 +695,7 @@ public class SendForm {
 			}
 		});
 		button_8.setText("");
-		button_8.setImage(SWTResourceManager.getImage("D:\\save.png"));
+		button_8.setImage(SWTResourceManager.getImage(picPath+"save.png"));
 		button_8.setBounds(69, 0, 25, 25);
 		
 		Button button_9 = new Button(composite_2, SWT.NONE);
@@ -719,7 +710,7 @@ public class SendForm {
 			}
 		});
 		button_9.setText("");
-		button_9.setImage(SWTResourceManager.getImage("D:\\copy.png"));
+		button_9.setImage(SWTResourceManager.getImage(picPath+"copy.png"));
 		button_9.setBounds(93, 0, 25, 25);
 
 	}

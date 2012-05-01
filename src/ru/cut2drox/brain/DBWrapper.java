@@ -76,13 +76,15 @@ public class DBWrapper {
         this.mDB = new DropboxAPI<WebAuthSession>(session);
 	}
 	
-	public String sendImage(String fullPath,String name) throws DropboxException, FileNotFoundException
+	public String sendImage(String fullPath,String name) throws DropboxException, IOException
 	{
 		File f = new File(fullPath);
 		InputStream input = new FileInputStream(f);
 		long length = f.length();
         Entry newEntry = mDB.putFile("/images/"+name,input, length, null, null);
         DropboxLink dl =  mDB.share("/images/"+name);
+        input.close();
+        f.delete();
         return dl.url;
 	}
 	

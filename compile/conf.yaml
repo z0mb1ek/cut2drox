@@ -1,12 +1,12 @@
 !!ru.cut2drox.brain.Config
 appKey: e2ccjhyrl799xgy
 appSecret: 0aqphohzhxuxpop
-b: 0
+b: 255
 firstConnectToDB: 1
 font: Comic Sans MS
 fontSize: 20
 fontStyle: 1
-g: 128
-height: 285
+g: 0
+height: 589
 r: 0
-width: 277
+width: 727
