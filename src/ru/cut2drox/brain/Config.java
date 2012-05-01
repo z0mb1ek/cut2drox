@@ -26,6 +26,8 @@ public class Config {
 	int R;
 	int G;
 	int B;
+	int width;
+	int height;
 	
 	String path=ClassLoader.getSystemResource(".").getPath()+"conf.yaml";
 //	String[] test = {"qwe","qweqw"};
@@ -40,9 +42,26 @@ public class Config {
 		R=0;
 		G=0;
 		B=0;
+		width=0;
+		height=0;
 	}
 	
-	
+	public void setHeight(int h)
+	{
+		this.height=h;
+	}
+	public int getHeight()
+	{
+		return height;
+	}
+	public void setWidth(int w)
+	{
+		this.width=w;
+	}
+	public int getWidth()
+	{
+		return width;
+	}
 	public void setR(int r)
 	{
 		this.R=r;

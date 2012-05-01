@@ -2,7 +2,6 @@ package ru.cut2drox.ui;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,8 +25,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
@@ -43,7 +40,6 @@ import ru.cut2drox.brain.DBWrapper;
 import ru.cut2drox.brain.TrayIcon;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
@@ -75,7 +71,7 @@ public class SendForm {
 	
 	Image currentImage;
 	
-	Stack images;
+	Stack<Image> images;
 	
 	ResizableCanvas canvas;
 	
@@ -96,8 +92,7 @@ public class SendForm {
 	/**
 	// * @param tip
 	 * @wbp.parser.entryPoint
-	 *///
-    /////qweqweqweqwe
+	 */
 	public void open(Image image) throws FileNotFoundException {
 		display = Display.getDefault();
 		
@@ -114,7 +109,7 @@ public class SendForm {
 	protected void createContents(final Image image) throws FileNotFoundException {
 
 		currentImage = image;
-		images=new Stack();
+		images=new Stack<Image>();
 		
 		shellForm = new Shell();
 		shellForm.setMinimumSize(new Point(277, 285));
@@ -125,8 +120,13 @@ public class SendForm {
 		Monitor[] list = display.getMonitors();
 		org.eclipse.swt.graphics.Rectangle client = shellForm.getBounds();
 		org.eclipse.swt.graphics.Rectangle screen = list[0].getBounds();
-		client.width=currentImage.getBounds().width+70; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
-		client.height=currentImage.getBounds().height+117;
+		try {
+			Config conf=new Config().takeConfig();
+			client.width=conf.getWidth();
+			client.height=conf.getHeight();
+		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+//		client.width=currentImage.getBounds().width+70; //20-на левый отступ + 25 на кнопку + около 20 на скролл 
+//		client.height=currentImage.getBounds().height+117;
 		client.x = screen.width/2 -client.width/2;
 		client.y = screen.height/2 - client.height/2;
 		shellForm.setBounds(client);
@@ -402,6 +402,12 @@ public class SendForm {
 		    	j=currentImage.getBounds().height+17;
 		    }
 		    	canvas.setRBounds(posx, posy, i, j);
+		    	try {
+					Config conf=new Config().takeConfig();
+					conf.setWidth(shellForm.getBounds().width);
+					conf.setHeight(shellForm.getBounds().height);
+					conf.makeConfig();
+				} catch (FileNotFoundException e1) {e1.printStackTrace();} catch (IOException e1) {e1.printStackTrace();}
 		    }  
 		});
 		
@@ -686,11 +692,15 @@ public class SendForm {
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 			    dialog.setFilterNames(new String[] { "JPEG images" });
 			    dialog.setFilterExtensions(new String[] { "*.jpg"});
-			    dialog.open();
-				ImageLoader loader = new ImageLoader();
-				loader.data = new ImageData[] {currentImage.getImageData()};
-				loader.save(dialog.getFilterPath()+ "\\"+dialog.getFileName(), SWT.IMAGE_PNG);
-				ti.showBalloon(shell,"Файл сохранен на жесткий диск.");
+			    String path =dialog.open();
+			    if(path!=null)
+			    {
+			    	ImageLoader loader = new ImageLoader();
+			    	loader.data = new ImageData[] {currentImage.getImageData()};
+			    	loader.save(dialog.getFilterPath()+ "\\"+dialog.getFileName(), SWT.IMAGE_PNG);
+			    	ti.showBalloon(shell,"Файл сохранен на жесткий диск.");
+			    }
+			    
 			}
 		});
 		button_8.setText("");
