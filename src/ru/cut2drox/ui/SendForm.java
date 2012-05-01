@@ -87,8 +87,13 @@ public class SendForm {
 	        if (!display.readAndDispatch())
 	          display.sleep();
 	      }
-	    display.dispose();
-	    
+	    display.dispose(); 
+	    System.exit(0);
+	}
+	
+	public static void closeApp()
+	{
+		shell.dispose();
 	}
 	
 	/**
