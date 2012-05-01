@@ -66,7 +66,6 @@ public class TextLabel extends Dialog {
 	public TextLabel(Shell parent, int style) {
 		super(parent, style);
 		this.parent=parent;
-		setText("SWT Dialog");
 	}
 	
 	/**

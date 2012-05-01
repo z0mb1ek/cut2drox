@@ -2,6 +2,7 @@ package ru.cut2drox.ui;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -655,22 +656,23 @@ public class SendForm {
 //					myFolder.mkdir();
 					
 					loader.save(fullPath, SWT.IMAGE_PNG);
-					DBWrapper connection = new DBWrapper();
+					DBWrapper connection = new DBWrapper(shell);
 					String imageShortURL = connection.sendImage(fullPath, nameImage);
 					
-//					
-//					String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
-//							"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" +
-//							"<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\" />" +
-//							"<title>cut2drox</title></head> " +
-//							"<body><div align=\"center\">" +
-//							"<img src=\""+imageShortURL +"\"/></div> " +
-//							"</body></html>";
-//					String nameCover = partName + ".xhtml";
-//					ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
-//					String finalURL = connection.sendFile(inputStream, content.length(), nameCover);
-//					
-					StringSelection ss = new StringSelection(imageShortURL);
+					
+					String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
+							"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" +
+							"<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\" />" +
+							"<title>cut2drox</title></head> " +
+							"<body><div align=\"center\">" +
+							"<img src=\""+imageShortURL +"\"/></div> " +
+							"</body></html>";
+					String nameCover = partName + ".xhtml";
+					ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
+					String finalURL = connection.sendFile(inputStream, content.length(), nameCover);
+					inputStream.close();
+					
+					StringSelection ss = new StringSelection(finalURL);
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 					
 					ti.showBalloon(shell,"Файл загружен.Ссылка скопирована в буфер обмена");

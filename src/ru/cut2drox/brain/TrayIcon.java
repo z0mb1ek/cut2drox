@@ -16,7 +16,6 @@ import ru.cut2drox.ui.SendForm;
 
 public class TrayIcon {
 	Display disp;
-	Shell sl;
 	ToolTip tip;
 	TrayItem item;
 	String picPath = ClassLoader.getSystemResource(".").getPath()+"pic\\";

@@ -13,6 +13,10 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.DropboxLink;
 import com.dropbox.client2.DropboxAPI.Entry;
@@ -33,8 +37,11 @@ public class DBWrapper {
 	DropboxAPI<WebAuthSession> mDB;
 	Config conf;
 	
-	public DBWrapper() throws MalformedURLException, DropboxException, IOException, URISyntaxException
+	Shell parent;
+	
+	public DBWrapper(Shell parent) throws MalformedURLException, DropboxException, IOException, URISyntaxException
 	{
+		this.parent=parent;
 		conf = new Config().takeConfig();
 		if(conf.getFirstConnectToDB()==0)
 		{
@@ -54,7 +61,10 @@ public class DBWrapper {
         String url = authInfo.url;
         
         Desktop.getDesktop().browse(new URL(url).toURI());		//посмотреть вариант на СВТ!!!!!!
-        JOptionPane.showMessageDialog(null, "Press ok to continue once you have authenticated.");
+        //JOptionPane.showMessageDialog(null, "Press ok to continue once you have authenticated.");
+        MessageBox dialog = new MessageBox(parent,SWT.OK | SWT.ICON_INFORMATION);
+        dialog.setMessage("После авторизации нажмите ОК, чтобы продолжить");
+        dialog.open();
       	session.retrieveWebAccessToken(pair);
       	AccessTokenPair tokens = session.getAccessTokenPair();
       	
@@ -82,7 +92,8 @@ public class DBWrapper {
 		InputStream input = new FileInputStream(f);
 		long length = f.length();
         Entry newEntry = mDB.putFile("/images/"+name,input, length, null, null);
-        DropboxLink dl =  mDB.share("/images/"+name);
+        //DropboxLink dl =  mDB.share("/images/"+name);
+        DropboxLink dl =  mDB.media("/images/"+name,false);
         input.close();
         f.delete();
         return dl.url;
@@ -91,7 +102,8 @@ public class DBWrapper {
 	public String sendFile(ByteArrayInputStream inputStream,long lenght,String name) throws DropboxException
 	{
 		Entry newEntry = mDB.putFile("/cover/"+name, inputStream, lenght, null, null);
-		DropboxLink dl =  mDB.share("/cover/"+name);
+		//DropboxLink dl =  mDB.share("/cover/"+name);
+		DropboxLink dl =  mDB.media("/cover/"+name,false);
         return dl.url;
 	}
 	
